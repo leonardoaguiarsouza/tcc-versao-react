@@ -1,0 +1,14 @@
+.links {
+    display: flex;
+    justify-content: space-between;
+}
+
+.links a{
+    color: var(--ion-color-tertiary);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.links .highlighted {
+    color: var(--ion-color-success);        
+}
