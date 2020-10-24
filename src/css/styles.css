@@ -3,12 +3,17 @@
     justify-content: space-between;
 }
 
-.links a{
+.links-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.link{
     color: var(--ion-color-tertiary);
     text-decoration: none;
     font-weight: bold;
 }
 
-.links .highlighted {
+.highlighted {
     color: var(--ion-color-success);        
 }
