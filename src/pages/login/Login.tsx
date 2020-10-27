@@ -8,7 +8,7 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar color="secondary">
           <IonTitle>Versão React</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -41,8 +41,8 @@ const Login: React.FC = () => {
                 <IonLabel>Ou então</IonLabel>
              </div>
               <div className="ion-padding">
-                <IonButton color="danger" expand="block"><IonIcon icon={logoGoogle}></IonIcon>Entre com Google</IonButton>
-                <IonButton color="tertiary" expand="block"><IonIcon icon={logoFacebook}></IonIcon>Entre com Facebook</IonButton>
+                <IonButton color="danger" expand="block"><IonIcon slot="start" icon={logoGoogle}></IonIcon>Entre com Google</IonButton>
+                <IonButton color="tertiary" expand="block"><IonIcon slot="start" icon={logoFacebook}></IonIcon>Entre com Facebook</IonButton>
               </div>
           </IonCol>
         </IonRow>

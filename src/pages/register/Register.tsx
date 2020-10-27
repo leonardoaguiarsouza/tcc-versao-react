@@ -8,7 +8,7 @@ const Register: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar color="secondary">
           <IonTitle>Versão React</IonTitle>
         </IonToolbar>
       </IonHeader>
