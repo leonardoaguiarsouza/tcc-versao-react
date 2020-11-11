@@ -29,10 +29,13 @@ import './css/styles.css';
 /* Theme variables */
 import './theme/variables.css';
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
+const App: React.FC = () => {
+
+  return (
+    <BrowserRouter>
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
         <Route path="/home" component={Home} exact={true} />
         <Route path="/login" component={Login} exact={true} />
         <Route path="/register" component={Register} exact={true} />
