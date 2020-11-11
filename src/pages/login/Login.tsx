@@ -1,14 +1,55 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonRouterLink } from '@ionic/react';
-import { logoGoogle, logoFacebook } from 'ionicons/icons'
-
-import React from 'react';
-import ExploreContainer from '../../components/ExploreContainer';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonRouterLink, useIonViewDidLeave } from '@ionic/react';
+import { useHistory } from "react-router-dom";
+import React, { useState } from 'react';
+import firebase from 'firebase'
+import LoginButtons from '../../components/LoginButtons';
 
 const Login: React.FC = () => {
+  let history = useHistory();
+  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  useIonViewDidLeave(() => {
+    setEmail("");
+    setPassword("");
+  });
+
+  function goToHome() {
+    history.push("/home");
+  }
+
+  async function userLogin() {
+    try {
+      await firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
+        goToHome();
+      })
+    } catch (error) {
+      let message: string;
+      console.log(error.code);
+      
+      switch(error.code){
+        case 'auth/email-already-in-use':
+          message = "E-mail já cadastrado!"
+        break;
+
+        case 'auth/invalid-email':
+          message = "Verifique o e-mail digitado!"
+        break;
+
+        default:
+          message = "Verifique se os dados foram preenchidos corretamente"
+        break;
+      }
+
+      console.log(message);
+    }
+  }
+
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="secondary">
+        <IonToolbar color="primary">
           <IonTitle>Versão React</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -23,15 +64,15 @@ const Login: React.FC = () => {
               <div className="ion-padding">
                 <IonItem>
                   <IonLabel position="floating">E-mail</IonLabel>
-                  <IonInput type="email" required></IonInput>
+                  <IonInput value={email} onIonChange={(e: any) => setEmail(e.target.value)} type="email" id="email" required></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Senha</IonLabel>
-                  <IonInput type="password" required></IonInput>
+                  <IonInput value={password} onIonChange={(e: any) => setPassword(e.target.value)} type="password" id="password" required></IonInput>
                 </IonItem>
               </div>
               <div className="ion-padding">
-                <IonButton expand="block">Entrar</IonButton>
+                <IonButton expand="block" onClick={userLogin}>Entrar</IonButton>
               </div>
               <div className="ion-padding-horizontal ion-padding-bottom links">
                 <IonRouterLink routerLink="/login" className="link">Esqueceu a senha</IonRouterLink>
@@ -40,10 +81,7 @@ const Login: React.FC = () => {
               <div className="ion-text-center">
                 <IonLabel>Ou então</IonLabel>
              </div>
-              <div className="ion-padding">
-                <IonButton color="danger" expand="block"><IonIcon slot="start" icon={logoGoogle}></IonIcon>Entre com Google</IonButton>
-                <IonButton color="tertiary" expand="block"><IonIcon slot="start" icon={logoFacebook}></IonIcon>Entre com Facebook</IonButton>
-              </div>
+             <LoginButtons />
           </IonCol>
         </IonRow>
         </IonGrid>

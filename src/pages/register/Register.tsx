@@ -1,14 +1,50 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonIcon, IonRouterLink } from '@ionic/react';
-import { logoGoogle, logoFacebook } from 'ionicons/icons'
-
-import React from 'react';
-import ExploreContainer from '../../components/ExploreContainer';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonRouterLink, useIonViewDidLeave } from '@ionic/react';
+import React, { useState } from 'react';
+import firebase from 'firebase'
+import { useHistory } from 'react-router';
+import LoginButtons from '../../components/LoginButtons';
 
 const Register: React.FC = () => {
+  let history = useHistory();
+  let userCollection = firebase.firestore().collection('users');
+
+  const [name, setName] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  useIonViewDidLeave(() => {
+    setName("");
+    setBirthDate("");
+    setEmail("");
+    setPassword("");
+  });
+
+  function GoToHome() {
+    history.push("/home");
+  }
+
+  async function userRegister() {
+    try {
+      firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
+        let userObj = {
+          id: firebase.auth().currentUser?.uid,
+          birthDate: birthDate,
+          name: name
+        }
+        userCollection.add(userObj).then(() => {
+          GoToHome();
+        });
+      });
+    } catch(error) {
+        console.log(">> " + error)
+    }
+  }
+
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="secondary">
+        <IonToolbar color="primary">
           <IonTitle>Versão React</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -23,23 +59,23 @@ const Register: React.FC = () => {
               <div className="ion-padding">
                 <IonItem>
                   <IonLabel position="floating">Nome</IonLabel>
-                  <IonInput name="name" required></IonInput>
+                  <IonInput value={name} onIonChange={(e: any) => setName(e.target.value)} type="text" name="name" required></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="stacked">Data de nascimento</IonLabel>
-                  <IonInput name="birthDate" type="date" required></IonInput>
+                  <IonInput value={birthDate} onIonChange={(e: any) => setBirthDate(e.target.value)} name="birthDate" type="date" required></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">E-mail</IonLabel>
-                  <IonInput type="email" required></IonInput>
+                  <IonInput value={email} onIonChange={(e: any) => setEmail(e.target.value)} name="email" type="email" required></IonInput>
                 </IonItem>
                 <IonItem>
                   <IonLabel position="floating">Senha</IonLabel>
-                  <IonInput type="password" required></IonInput>
+                  <IonInput value={password} onIonChange={(e: any) => setPassword(e.target.value)} name="password" type="password" required></IonInput>
                 </IonItem>
               </div>
               <div className="ion-padding">
-                <IonButton expand="block">Cadastre-se</IonButton>
+                <IonButton onClick={userRegister} expand="block">Cadastre-se</IonButton>
               </div>
               <div className="ion-padding-horizontal ion-padding-bottom links-end">
                 <IonRouterLink routerLink="/login" className="link highlighted">Fazer Login</IonRouterLink>
@@ -47,10 +83,7 @@ const Register: React.FC = () => {
               <div className="ion-text-center">
                 <IonLabel>Ou então</IonLabel>
               </div>
-              <div className="ion-padding">
-                <IonButton color="danger" expand="block"><IonIcon icon={logoGoogle}></IonIcon>Entre com Google</IonButton>
-                <IonButton color="tertiary" expand="block"><IonIcon icon={logoFacebook}></IonIcon>Entre com Facebook</IonButton>
-              </div>
+              <LoginButtons />
             </IonCol>
           </IonRow>
         </IonGrid>
