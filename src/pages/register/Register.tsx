@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import firebase from 'firebase'
 import { useHistory } from 'react-router';
 import LoginButtons from '../../components/LoginButtons';
+import { createLoading } from '../../loading';
 
 const Register: React.FC = () => {
   let history = useHistory();
@@ -25,6 +26,9 @@ const Register: React.FC = () => {
   }
 
   async function userRegister() {
+    const loading = createLoading();
+    (await loading).present();
+
     try {
       firebase.auth().createUserWithEmailAndPassword(email, password).then(() => {
         let userObj = {
@@ -38,6 +42,8 @@ const Register: React.FC = () => {
       });
     } catch(error) {
         console.log(">> " + error)
+    } finally {
+      (await loading).dismiss();
     }
   }
 

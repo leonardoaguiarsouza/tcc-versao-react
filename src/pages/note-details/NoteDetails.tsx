@@ -1,8 +1,9 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonLabel, IonItem, IonBackButton, IonInput, IonTextarea, IonCheckbox, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonLabel, IonItem, IonBackButton, IonInput, IonTextarea, IonCheckbox, useIonViewWillEnter } from '@ionic/react';
 import React, { useState } from 'react';
 import NoteDetailsFooter from '../../components/NoteDetailsFooter';
 import firebase from "firebase";
 import './NoteDetails.css';
+import { createLoading } from '../../loading';
 
 const NoteDetails: React.FC<{
         match: any;
@@ -16,11 +17,13 @@ const NoteDetails: React.FC<{
         
     const id = props.match.params.id;
     const noteCollection = firebase.firestore().collection('notes');
-    const [ionTitle, setIonTitle] = useState("Nova Nota...");
+    const [ionTitle, setIonTitle] = useState("");
     const [state, setState] = React.useState(initialState);    
     const [noteActive, setNoteActive] = useState(false);    
     
     const fetchData = async() => {
+        const loading = createLoading();
+        (await loading).present();
         try {
             const response = await noteCollection
                 .doc(id)
@@ -33,6 +36,7 @@ const NoteDetails: React.FC<{
 
             setState(data);
             setNoteActive(data.active);
+            (await loading).dismiss();
         } catch(err) {
             console.error(err);
         }
@@ -55,9 +59,6 @@ const NoteDetails: React.FC<{
             setNoteActive(evt.detail.checked);
     }
     
-    if(ionTitle === "")
-        setIonTitle("Nova Nota...")
-
     return (
         <IonPage>
             <IonHeader>

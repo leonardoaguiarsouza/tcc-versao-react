@@ -3,6 +3,8 @@ import { useHistory } from "react-router-dom";
 import React, { useState } from 'react';
 import firebase from 'firebase'
 import LoginButtons from '../../components/LoginButtons';
+import {  createLoading } from '../../loading';
+import { toast } from '../../toast';
 
 const Login: React.FC = () => {
   let history = useHistory();
@@ -19,12 +21,16 @@ const Login: React.FC = () => {
     history.push("/home");
   }
 
-  async function userLogin() {
+async function userLogin() {
+  const loading = createLoading();
+  (await loading).present();
+    
     try {
       await firebase.auth().signInWithEmailAndPassword(email, password).then(() => {
         goToHome();
       })
     } catch (error) {
+
       let message: string;
       console.log(error.code);
       
@@ -42,7 +48,9 @@ const Login: React.FC = () => {
         break;
       }
 
-      console.log(message);
+      toast(message, 2000, "danger");
+    } finally {
+      (await loading).dismiss();
     }
   }
 

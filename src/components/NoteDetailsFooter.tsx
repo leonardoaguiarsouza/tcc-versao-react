@@ -1,9 +1,9 @@
-import  React, { useContext, useCallback, useState } from  "react";
-import { IonButton, IonIcon, IonFooter, IonToolbar, IonRow, IonCol, NavContext, IonToast } from "@ionic/react";
+import  React, { useContext, useCallback } from  "react";
+import { IonButton, IonIcon, IonFooter, IonToolbar, IonRow, IonCol, NavContext } from "@ionic/react";
 import { checkmarkCircle, trash, save } from "ionicons/icons";
-import { Note } from "../interfaces/note";
 import firebase from "firebase";
 import { toast } from "../toast";
+
 
 const NoteDetailsFooter: React.FC<{
         note: any;
@@ -27,6 +27,7 @@ const NoteDetailsFooter: React.FC<{
         props.note.user = userId;
         props.note.active = props.noteActive;
         noteCollection.add(props.note).then(() => {
+            toast("Nota criada com sucesso!", 2000);
             goToHome();
             console.log("Nota criada com sucesso!");
         });
@@ -37,7 +38,7 @@ const NoteDetailsFooter: React.FC<{
         props.note.active = props.noteActive;
         noteCollection.doc(props.id).update(props.note).then(() => {
             goToHome();
-            toast("Nota atualizada com sucesso!");
+            toast("Nota atualizada com sucesso!", 2000);
             console.log("Nota atualizada com sucesso!");
         });
     }
@@ -45,7 +46,7 @@ const NoteDetailsFooter: React.FC<{
     function deleteNote() {
         noteCollection.doc(props.id).delete().then(() => {
             goToHome();
-            toast("Nota excluida com sucesso!");
+            toast("Nota excluida com sucesso!", 2000);
             console.log("Nota excluida com sucesso!");
         });
     }

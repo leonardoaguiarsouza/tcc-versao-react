@@ -1,9 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonMenuButton, IonButtons, IonFab, IonFabButton, IonIcon, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel, useIonViewWillEnter, useIonViewDidLeave, useIonViewDidEnter } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonMenuButton, IonButtons, IonFab, IonFabButton, IonIcon, IonGrid, IonRow, IonCol, IonList, IonItem, IonLabel, useIonViewWillEnter, useIonViewDidLeave } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import React, { useState } from 'react';
 import firebase from "firebase";
 import './Home.css';
 import LogoutButton from '../../components/LogoutButton';
+import { createLoading } from '../../loading';
 
 const Home: React.FC = () => {
   const userId = firebase.auth().currentUser?.uid;
@@ -12,6 +13,8 @@ const Home: React.FC = () => {
   const [itemList, setItemList] = useState(initialArray);
 
   const fetchData = async() => {
+    const loading = createLoading();
+    (await loading).present();
     try {
         const response = await firebase.firestore()
             .collection("notes")
@@ -25,10 +28,12 @@ const Home: React.FC = () => {
         })
     } catch(err) {
         console.error(err);
+    } finally {
+      (await loading).dismiss();
     }
   };  
 
-  useIonViewDidEnter(()=> {
+  useIonViewWillEnter(()=> {
     if(userId) fetchData().then(() => {
       setItemList(array);
     });
