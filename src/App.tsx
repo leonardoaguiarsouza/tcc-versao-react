@@ -42,7 +42,7 @@ const App: React.FC = () => {
             <Route path="/register" component={Register} exact />
             <Route path="/home" component={Home} exact />
             <Route path="/note" component={NoteDetails} exact />
-            <Route path="/note/:id" component={NoteDetails} exact />
+            <Route path="/note/:id" exact render={(props) => <NoteDetails {...props} />}/> 
           </IonRouterOutlet>
         </IonReactRouter >
       </IonApp>
