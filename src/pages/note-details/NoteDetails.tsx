@@ -47,9 +47,10 @@ const NoteDetails: React.FC<{
             ...state,
             [evt.target.name]: evt.target.value
         });
+        if(evt.target.name == "title") setIonTitle(evt.target.value)
     }
 
-    function handleChangeLeo(evt: any) {
+    function handleChangeNoteActive(evt: any) {
         if(evt.detail.checked != null)
             setNoteActive(evt.detail.checked);
     }
@@ -81,7 +82,7 @@ const NoteDetails: React.FC<{
               
                 <IonItem>
                     <IonLabel position="fixed">Ativo</IonLabel>
-                    <IonCheckbox checked={noteActive} onIonChange={(e: any) => handleChangeLeo(e) } name="active" id="active" />
+                    <IonCheckbox checked={noteActive} onIonChange={(e: any) => handleChangeNoteActive(e) } name="active" id="active" />
                 </IonItem>
             </IonContent>
             <NoteDetailsFooter note={state} noteActive={noteActive} id={id}/>
