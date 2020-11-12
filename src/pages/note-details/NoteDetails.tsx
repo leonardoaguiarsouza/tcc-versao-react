@@ -1,14 +1,9 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonLabel, IonItem, IonBackButton, IonInput, IonTextarea, IonCheckbox, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
 import React, { useState, useEffect } from 'react';
-import { map, take } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { Note } from "../../interfaces/note";
+import NoteDetailsFooter from '../../components/NoteDetailsFooter';
 import firebase from "firebase";
 import './NoteDetails.css';
 
-import NoteDetailsFooter from '../../components/NoteDetailsFooter';
-import { Component } from 'ionicons/dist/types/stencil-public-runtime';
-  
 const NoteDetails: React.FC<{
         match: any;
     }> = (props) => {
@@ -19,16 +14,14 @@ const NoteDetails: React.FC<{
         active: null
     }
         
-    type DocumentData = { [field: string]: any };
     const id = props.match.params.id;
-    const noteCollection = firebase.firestore().collection('notes');  
+    const noteCollection = firebase.firestore().collection('notes');
     const [ionTitle, setIonTitle] = useState("Nova Nota...");
     const [state, setState] = React.useState(initialState);    
 
     const fetchData = async() => {
         try {
-            const response = await firebase.firestore()
-                .collection("notes")
+            const response = await noteCollection
                 .doc(id)
                 .get();
 
