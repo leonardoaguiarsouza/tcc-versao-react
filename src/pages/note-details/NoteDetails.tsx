@@ -1,5 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonLabel, IonItem, IonBackButton, IonInput, IonTextarea, IonCheckbox, useIonViewDidEnter, useIonViewWillEnter } from '@ionic/react';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import NoteDetailsFooter from '../../components/NoteDetailsFooter';
 import firebase from "firebase";
 import './NoteDetails.css';
@@ -18,7 +18,8 @@ const NoteDetails: React.FC<{
     const noteCollection = firebase.firestore().collection('notes');
     const [ionTitle, setIonTitle] = useState("Nova Nota...");
     const [state, setState] = React.useState(initialState);    
-
+    const [noteActive, setNoteActive] = useState(false);    
+    
     const fetchData = async() => {
         try {
             const response = await noteCollection
@@ -31,29 +32,26 @@ const NoteDetails: React.FC<{
                 data = response.data();
 
             setState(data);
+            setNoteActive(data.active);
         } catch(err) {
             console.error(err);
         }
     };
 
     useIonViewWillEnter(()=> {
-        if(id) fetchData();        
-    }, [])
-
-    function compareObj(object1: any, object2: any) {
-        return object1.active === object2.active;
-      }
-
+        if(id) fetchData();
+    })
+    
     function handleChange(evt: any) {
-        let value = evt.target.name === "active" ? evt.target.checked : evt.target.value;
-        if(evt.target.name === "title") setIonTitle(value)
+        setState({
+            ...state,
+            [evt.target.name]: evt.target.value
+        });
+    }
 
-        if(!compareObj(state, initialState)) {
-            setState({
-                ...state,
-                [evt.target.name]: value
-            });
-        }
+    function handleChangeLeo(evt: any) {
+        if(evt.detail.checked != null)
+            setNoteActive(evt.detail.checked);
     }
     
     if(ionTitle === "")
@@ -83,10 +81,10 @@ const NoteDetails: React.FC<{
               
                 <IonItem>
                     <IonLabel position="fixed">Ativo</IonLabel>
-                    <IonCheckbox checked={state.active} onIonChange={(e: any) => handleChange(e) } name="active" />
+                    <IonCheckbox checked={noteActive} onIonChange={(e: any) => handleChangeLeo(e) } name="active" id="active" />
                 </IonItem>
             </IonContent>
-            <NoteDetailsFooter note={state} id={id}/>
+            <NoteDetailsFooter note={state} noteActive={noteActive} id={id}/>
         </IonPage>
     );
 };

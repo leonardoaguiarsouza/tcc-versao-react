@@ -6,7 +6,8 @@ import './Home.css';
 import LogoutButton from '../../components/LogoutButton';
 
 const Home: React.FC = () => {
-  const userId = firebase.auth().currentUser?.uid;
+  // const userId = firebase.auth().currentUser?.uid;
+  const userId = "GiH6tjyRtWUnfOyl4ujR1Vg5rvA3";
   let initialArray: Array<[any, any]> = [];
   let array: Array<[any, any]> = [];
   const [itemList, setItemList] = useState(initialArray);
