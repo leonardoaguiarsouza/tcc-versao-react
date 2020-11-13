@@ -1,7 +1,8 @@
-import React from 'react';
-import { Redirect, Route, BrowserRouter } from 'react-router-dom';
-import { IonApp, IonRouterOutlet } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import { Redirect, Route } from 'react-router-dom';
+import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
+import firebase from "firebase";
 
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
@@ -28,25 +29,35 @@ import './css/styles.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
 import NoteDetails from './pages/note-details/NoteDetails';
+import Sidebar from './components/Sidebar';
 
 const App: React.FC = () => {
+  const [user, setUser] = useState<any>();
+
+  useEffect(() => {
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) setUser(user);
+    });
+  }, [])
 
   return (
-    <BrowserRouter>
-      <IonApp>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route exact path="/" render={() => <Redirect to="/login" />} />
-            <Route path="/login" component={Login} exact />
-            <Route path="/register" component={Register} exact />
-            <Route path="/home" component={Home} exact />
-            <Route path="/note" component={NoteDetails} exact />
-            <Route path="/note/:id" exact render={(props) => <NoteDetails {...props} />}/> 
-          </IonRouterOutlet>
-        </IonReactRouter >
-      </IonApp>
-    </BrowserRouter>
+    <IonApp>
+      <IonReactRouter>
+        <IonSplitPane contentId="main">
+          <Sidebar user={user}/>
+          <IonRouterOutlet id="main">
+          <Route exact path="/" render={() => <Redirect to="/login" />} />
+          <Route path="/login" component={Login} exact />
+          <Route path="/register" component={Register} exact />
+          <Route path="/home" component={Home} exact />
+          <Route path="/note" component={NoteDetails} exact />
+          <Route path="/note/:id" exact render={(props) => <NoteDetails {...props} />}/> 
+        </IonRouterOutlet>
+        </IonSplitPane>
+      </IonReactRouter >
+    </IonApp>
   )
 };
 

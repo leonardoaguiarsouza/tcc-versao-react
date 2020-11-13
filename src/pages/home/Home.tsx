@@ -3,8 +3,8 @@ import { add } from 'ionicons/icons';
 import React, { useState } from 'react';
 import firebase from "firebase";
 import './Home.css';
-import LogoutButton from '../../components/LogoutButton';
 import { createLoading } from '../../loading';
+import { menuController } from '@ionic/core';
 
 const Home: React.FC = () => {
   const userId = firebase.auth().currentUser?.uid;
@@ -34,6 +34,7 @@ const Home: React.FC = () => {
   };  
 
   useIonViewWillEnter(()=> {
+    menuController.enable(true);
     if(userId) fetchData().then(() => {
       setItemList(array);
     });
@@ -52,7 +53,6 @@ const Home: React.FC = () => {
             <IonMenuButton autoHide={false}></IonMenuButton>
           </IonButtons>
           <IonTitle text-center>Versão React</IonTitle>
-          <LogoutButton slot="end" />
         </IonToolbar>
       </IonHeader>
 

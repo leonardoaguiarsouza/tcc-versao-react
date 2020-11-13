@@ -1,10 +1,12 @@
 import  React, { useContext, useCallback } from  "react";
 import { IonButtons, IonButton, IonIcon, NavContext } from "@ionic/react";
 import { logOut } from "ionicons/icons";
+import { menuController } from '@ionic/core';
 import firebase from "firebase";
 
 const LogoutButton: React.FC<{
         slot?: string;
+        className?: string;
     }> = (props) => {
    
     const {navigate} = useContext(NavContext);
@@ -21,6 +23,9 @@ const LogoutButton: React.FC<{
         })
         } catch(error) {
             console.log(">> " + error)
+        } finally {
+            menuController.close();
+            menuController.enable(false);
         }
     }   
 
@@ -39,7 +44,7 @@ const LogoutButton: React.FC<{
               </IonButton> 
           </IonButtons>
     ) : (
-        <IonButtons>
+        <IonButtons className={props.className}>
             <IonButton onClick={userLogout}>
               <IonIcon icon={logOut}></IonIcon>
                 Logout

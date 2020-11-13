@@ -22,7 +22,7 @@ const NoteDetails: React.FC<{
     const [noteActive, setNoteActive] = useState(false);    
     
     const fetchData = async() => {
-        const loading = createLoading();
+        const loading = createLoading("Carregando nota");
         (await loading).present();
         try {
             const response = await noteCollection

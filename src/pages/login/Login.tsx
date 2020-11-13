@@ -1,16 +1,21 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonRouterLink, useIonViewDidLeave } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonGrid, IonRow, IonCol, IonItem, IonLabel, IonInput, IonButton, IonRouterLink, useIonViewDidLeave, useIonViewWillEnter } from '@ionic/react';
 import { useHistory } from "react-router-dom";
 import React, { useState } from 'react';
 import firebase from 'firebase'
 import LoginButtons from '../../components/LoginButtons';
 import {  createLoading } from '../../loading';
 import { toast } from '../../toast';
+import { menuController } from '@ionic/core';
 
 const Login: React.FC = () => {
   let history = useHistory();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useIonViewWillEnter(() => {
+    menuController.enable(false);
+  });
 
   useIonViewDidLeave(() => {
     setEmail("");
