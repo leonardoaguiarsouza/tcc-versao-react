@@ -29,7 +29,6 @@ const NoteDetailsFooter: React.FC<{
         noteCollection.add(props.note).then(() => {
             toast("Nota criada com sucesso!", 2000);
             goToHome();
-            console.log("Nota criada com sucesso!");
         });
     }
 
@@ -39,7 +38,6 @@ const NoteDetailsFooter: React.FC<{
         noteCollection.doc(props.id).update(props.note).then(() => {
             goToHome();
             toast("Nota atualizada com sucesso!", 2000);
-            console.log("Nota atualizada com sucesso!");
         });
     }
 
@@ -47,7 +45,6 @@ const NoteDetailsFooter: React.FC<{
         noteCollection.doc(props.id).delete().then(() => {
             goToHome();
             toast("Nota excluida com sucesso!", 2000);
-            console.log("Nota excluida com sucesso!");
         });
     }
 

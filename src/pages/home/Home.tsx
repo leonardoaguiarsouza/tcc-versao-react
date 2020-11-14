@@ -8,8 +8,8 @@ import { menuController } from '@ionic/core';
 
 const Home: React.FC = () => {
   const userId = firebase.auth().currentUser?.uid;
-  let initialArray: Array<[any, any]> = [];
-  let array: Array<[any, any]> = [];
+  let initialArray: Array<[any, any, any]> = [];
+  let array: Array<[any, any, any]> = [];
   const [itemList, setItemList] = useState(initialArray);
 
   const fetchData = async() => {
@@ -24,7 +24,8 @@ const Home: React.FC = () => {
         response.forEach(element => {
           let path = "/note/" + element.id;
           let title = element.data()?.title;
-          array.push([path, title])
+          let active = element.data()?.active;
+          array.push([path, title, active])
         })
     } catch(err) {
         console.error(err);
@@ -68,7 +69,7 @@ const Home: React.FC = () => {
             itemList.map(
                 ( _item, _index ) => (
                 <IonItem key={_index} button routerLink={_item[0]}>
-                  <IonLabel>{_item[1]}</IonLabel>
+                  <IonLabel color={_item[2] ? "" : "danger"}>{_item[1]}</IonLabel>
                 </IonItem>
             ) )
           }
