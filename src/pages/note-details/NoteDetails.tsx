@@ -10,14 +10,14 @@ const NoteDetails: React.FC<{
     }> = (props) => {
 
     let initialState: any = {
-        title: "",
-        content: "",
+        title: null,
+        content: null,
         active: null
     }
         
     const id = props.match.params.id;
     const noteCollection = firebase.firestore().collection('notes');
-    const [ionTitle, setIonTitle] = useState("");
+    const [ionTitle, setIonTitle] = useState("Nova nota");
     const [state, setState] = React.useState(initialState);    
     const [noteActive, setNoteActive] = useState(false);    
     
@@ -73,7 +73,7 @@ const NoteDetails: React.FC<{
             <IonContent className="ion-padding">
                 <IonItem>
                     <IonLabel position="stacked">Título</IonLabel>
-                    <IonInput value={state.title} onIonChange={(e: any) => handleChange(e) } name="title" />
+                    <IonInput maxlength={15} value={state.title} onIonChange={(e: any) => handleChange(e) } name="title" />
                 </IonItem>
                 
                 <IonItem>
