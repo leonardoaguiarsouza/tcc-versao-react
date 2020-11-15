@@ -6,9 +6,9 @@ import './Home.css';
 import { createLoading } from '../../loading';
 import { menuController } from '@ionic/core';
 
-const Home: React.FC<{
-      user: any;
-    }> = (props) => {
+const Home: React.FC = () => {
+  
+  let userId = firebase.auth().currentUser?.uid;
   let initialArray: Array<[any, any, any, any, any]> = [];
   let array: Array<[any, any, any, any, any]> = [];
   const [itemList, setItemList] = useState(initialArray);
@@ -26,7 +26,7 @@ const Home: React.FC<{
     try {
         const response = await firebase.firestore()
             .collection("notes")
-            .where("user", "==", props.user?.uid)
+            .where("user", "==", userId)
             .get();
 
         response.forEach(element => {
@@ -47,7 +47,7 @@ const Home: React.FC<{
 
   useIonViewWillEnter(()=> {
     menuController.enable(true);
-    if(props.user) {
+    if(userId) {
       fetchData().then(() => {
         setItemList(array);
       });
