@@ -83,9 +83,9 @@ const Home: React.FC<{
                 ( _item, _index ) => (
                 <IonItem className={_item[2] ? "note-active" : "note-inactive"} key={_index} button routerLink={_item[0]}>
                   <IonLabel>
-                  <h3>{_item[1]}</h3>
-                  <p>Ultima modificação em:</p>
-                  <p>&mdash;&nbsp;{_item[4]}</p>
+                    <h3>{_item[1]}</h3>
+                    <p>Ultima modificação em:</p>
+                    <p>&mdash;&nbsp;{_item[4]}</p>
                   </IonLabel>
                 </IonItem>
             ) )
