@@ -6,11 +6,19 @@ import './Home.css';
 import { createLoading } from '../../loading';
 import { menuController } from '@ionic/core';
 
-const Home: React.FC = () => {
-  const userId = firebase.auth().currentUser?.uid;
-  let initialArray: Array<[any, any, any]> = [];
-  let array: Array<[any, any, any]> = [];
+const Home: React.FC<{
+      user: any;
+    }> = (props) => {
+  let initialArray: Array<[any, any, any, any, any]> = [];
+  let array: Array<[any, any, any, any, any]> = [];
   const [itemList, setItemList] = useState(initialArray);
+
+  function dateConverter(timestamp: any){
+    let date = timestamp.toDate().toLocaleDateString('pt-BR');
+    let time = timestamp.toDate().toLocaleTimeString('pt-BR');
+    let dateString = date + " " + time;
+    return dateString;
+  }
 
   const fetchData = async() => {
     const loading = createLoading();
@@ -18,14 +26,17 @@ const Home: React.FC = () => {
     try {
         const response = await firebase.firestore()
             .collection("notes")
-            .where("user", "==", userId)
+            .where("user", "==", props.user?.uid)
             .get();
 
         response.forEach(element => {
           let path = "/note/" + element.id;
           let title = element.data()?.title;
           let active = element.data()?.active;
-          array.push([path, title, active])
+          let createdAt = dateConverter(element.data()?.createdAt);
+          let lastModify =  dateConverter(element.data()?.lastModify);
+          
+          array.push([path, title, active, createdAt, lastModify])
         })
     } catch(err) {
         console.error(err);
@@ -36,9 +47,11 @@ const Home: React.FC = () => {
 
   useIonViewWillEnter(()=> {
     menuController.enable(true);
-    if(userId) fetchData().then(() => {
-      setItemList(array);
-    });
+    if(props.user) {
+      fetchData().then(() => {
+        setItemList(array);
+      });
+    }
   }, [])
   
   useIonViewDidLeave(()=> {
@@ -68,8 +81,12 @@ const Home: React.FC = () => {
           {
             itemList.map(
                 ( _item, _index ) => (
-                <IonItem key={_index} button routerLink={_item[0]}>
-                  <IonLabel color={_item[2] ? "" : "danger"}>{_item[1]}</IonLabel>
+                <IonItem className={_item[2] ? "note-active" : "note-inactive"} key={_index} button routerLink={_item[0]}>
+                  <IonLabel>
+                  <h3>{_item[1]}</h3>
+                  <p>Ultima modificação em:</p>
+                  <p>&mdash;&nbsp;{_item[4]}</p>
+                  </IonLabel>
                 </IonItem>
             ) )
           }

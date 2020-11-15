@@ -7,6 +7,8 @@ import firebase from "firebase";
 import Home from './pages/home/Home';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
+import NoteDetails from './pages/note-details/NoteDetails';
+import Sidebar from './components/Sidebar';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -30,9 +32,6 @@ import './css/styles.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import NoteDetails from './pages/note-details/NoteDetails';
-import Sidebar from './components/Sidebar';
-
 const App: React.FC = () => {
   const [user, setUser] = useState<any>();
 
@@ -48,13 +47,13 @@ const App: React.FC = () => {
         <IonSplitPane contentId="main">
           <Sidebar user={user}/>
           <IonRouterOutlet id="main">
-          <Route exact path="/" render={() => <Redirect to="/login" />} />
-          <Route path="/login" component={Login} exact />
-          <Route path="/register" component={Register} exact />
-          <Route path="/home" component={Home} exact />
-          <Route path="/note" component={NoteDetails} exact />
-          <Route path="/note/:id" exact render={(props) => <NoteDetails {...props} />}/> 
-        </IonRouterOutlet>
+            <Route exact path="/" render={() => <Redirect to="/login" />} />
+            <Route path="/login" component={Login} exact />
+            <Route path="/register" component={Register} exact />
+            <Route path="/home" exact> <Home user={user} /> </Route>
+            <Route path="/note" component={NoteDetails} exact />
+            <Route path="/note/:id" exact render={(props) => <NoteDetails {...props} />}/> 
+          </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter >
     </IonApp>
