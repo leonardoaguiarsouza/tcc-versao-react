@@ -1,9 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonLabel, IonItem, IonBackButton, IonInput, IonTextarea, IonCheckbox, useIonViewWillEnter } from '@ionic/react';
-import React, { useState } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonLabel, IonItem, IonBackButton, IonInput, IonTextarea, IonCheckbox, useIonViewWillEnter, NavContext } from '@ionic/react';
+import React, { useState, useContext, useCallback } from 'react';
 import NoteDetailsFooter from '../../components/NoteDetailsFooter';
 import firebase from "firebase";
 import './NoteDetails.css';
 import { createLoading } from '../../loading';
+import { toast } from '../../toast';
 
 const NoteDetails: React.FC<{
         match: any;
@@ -14,8 +15,16 @@ const NoteDetails: React.FC<{
         content: null,
         active: null
     }
+
+    const {navigate} = useContext(NavContext);
+
+    const goToHome = useCallback(
+        () => navigate('/home', 'back'),
+        [navigate]
+    );
         
     const id = props.match.params.id;
+    const userId = firebase.auth().currentUser?.uid;
     const noteCollection = firebase.firestore().collection('notes');
     const [ionTitle, setIonTitle] = useState("Nova nota");
     const [state, setState] = React.useState(initialState);    
@@ -33,6 +42,13 @@ const NoteDetails: React.FC<{
 
             if (response.exists)
                 data = response.data();
+            
+            if(data.user != userId) {
+                (await loading).dismiss();
+                goToHome();
+                toast("Sem permissão para acessar essa nota", 2000, "danger");
+                return;
+            }
 
             setState(data);
             setNoteActive(data.active);
